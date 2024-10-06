@@ -1,8 +1,3 @@
-# Piano Tiles
-
-# Author : Prajjwal Pathak (pyguru)
-# Date : Thursday, 30 November, 2021
-
 import json
 import random
 import pygame
@@ -27,13 +22,11 @@ else:
 clock = pygame.time.Clock()
 FPS = 30
 
-# COLORS *********************************************************************
 
 WHITE = (255, 255, 255)
 GRAY = (75, 75, 75)
 BLUE = (30, 144, 255)
 
-# IMAGES *********************************************************************
 
 bg_img = pygame.image.load('Assets/bg.png')
 bg_img = pygame.transform.scale(bg_img, (WIDTH, HEIGHT))
@@ -51,7 +44,6 @@ start_rect = start_img.get_rect(center=(WIDTH//2, HEIGHT-80))
 overlay = pygame.image.load('Assets/red overlay.png')
 overlay = pygame.transform.scale(overlay, (WIDTH, HEIGHT))
 
-# MUSIC **********************************************************************
 
 buzzer_fx = pygame.mixer.Sound('Sounds/piano-buzzer.mp3')
 
@@ -59,7 +51,6 @@ pygame.mixer.music.load('Sounds/piano-bgmusic.mp3')
 pygame.mixer.music.set_volume(0.8)
 pygame.mixer.music.play(loops=-1)
 
-# FONTS **********************************************************************
 
 score_font = pygame.font.Font('Fonts/Futura condensed.ttf', 32)
 title_font = pygame.font.Font('Fonts/Alternity-8w7J.ttf', 30)
@@ -67,7 +58,6 @@ gameover_font = pygame.font.Font('Fonts/Alternity-8w7J.ttf', 40)
 
 title_img = title_font.render('Piano Tiles', True, WHITE)
 
-# BUTTONS ********************************************************************
 
 close_img = pygame.image.load('Assets/closeBtn.png')
 replay_img = pygame.image.load('Assets/replay.png')
@@ -78,7 +68,6 @@ close_btn = Button(close_img, (24, 24), WIDTH // 4 - 18, HEIGHT//2 + 120)
 replay_btn = Button(replay_img, (36,36), WIDTH // 2  - 18, HEIGHT//2 + 115)
 sound_btn = Button(sound_on_img, (24, 24), WIDTH - WIDTH // 4 - 18, HEIGHT//2 + 120)
 
-# GROUPS & OBJECTS ***********************************************************
 
 tile_group = pygame.sprite.Group()
 square_group = pygame.sprite.Group()
@@ -86,7 +75,14 @@ text_group = pygame.sprite.Group()
 
 time_counter = Counter(win, gameover_font)
 
-# FUNCTIONS ******************************************************************
+
+#View layer | Imagenes en la pantalla de inicio
+
+def home_page_screen(win, piano, start_img, start_rect, title, width, height):
+	win.blit(piano_img, (width//8, height//8))
+	win.blit(start_img, start_rect)
+	win.blit(title_img, (width // 2 - title_img.get_width() / 2 + 10, 300))
+
 
 def get_speed(score):
 	return 200 + 5 * score
@@ -108,12 +104,10 @@ def save_high_score():
     with open ('highscore.json', 'w') as file:
         json.dump(high_score, file)
 
-# NOTES **********************************************************************
 
 with open('notes.json') as file:
 	notes_dict = json.load(file)
 
-# VARIABLES ******************************************************************
 
 score = 0
 high_score = 0
@@ -160,9 +154,7 @@ while running:
 			pos = event.pos
 
 	if home_page:
-		win.blit(piano_img, (WIDTH//8, HEIGHT//8))
-		win.blit(start_img, start_rect)
-		win.blit(title_img, (WIDTH // 2 - title_img.get_width() / 2 + 10, 300))
+		home = home_page_screen(win, piano_img, start_img, start_rect, title_img, WIDTH, HEIGHT)
 
 		if pos and start_rect.collidepoint(pos):
 			home_page = False
@@ -177,6 +169,8 @@ while running:
 			notes_list = notes_dict['2']
 			note_count = 0
 			pygame.mixer.set_num_channels(len(notes_list))
+
+
 
 	if game_page:
 		time_counter.update()
@@ -245,8 +239,9 @@ while running:
 					img3 = score_font.render(f'High Score : {high_score}', True, WHITE)
 					win.blit(img1, (WIDTH // 2 - img1.get_width() / 2, 180))
 					win.blit(img2, (WIDTH // 2 - img2.get_width() / 2, 250))
-					# Persistence | Implementacion HighScore GameOver
-					win.blit(img3, (WIDTH // 2 - img3.get_width() / 2, 300))
+					# Persistence | Implementacion HighScore GameOver solo si se supera la highscore
+					if score >= high_score:
+						win.blit(img3, (WIDTH // 2 - img3.get_width() / 2, 300))
 
 					#Guardar el highscore cuando termina
 					save_high_score()
