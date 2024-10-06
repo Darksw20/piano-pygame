@@ -94,6 +94,20 @@ def get_speed(score):
 def play_notes(notePath):
 	pygame.mixer.Sound(notePath).play()
 
+# Persistence | Implementacion de cargar archivo del highscore
+def load_high_score():
+    global high_score
+    try:
+        with open('highscore.json', 'r') as file:
+            high_score = json.load(file)
+    except FileNotFoundError:
+        high_score = 0
+
+# Persistence | Implementacion de guardar archivo del highscore
+def save_high_score():
+    with open ('highscore.json', 'w') as file:
+        json.dump(high_score, file)
+
 # NOTES **********************************************************************
 
 with open('notes.json') as file:
@@ -107,6 +121,9 @@ speed = 0
 
 clicked = False
 pos = None
+
+# Cargar el Highscore desde el archivo
+load_high_score()
 
 home_page = True
 game_page = False
@@ -131,6 +148,7 @@ while running:
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
+			save_high_score() # Guardar el high Score al salir
 			running = False
 
 		if event.type == pygame.KEYDOWN:
@@ -229,6 +247,9 @@ while running:
 					win.blit(img2, (WIDTH // 2 - img2.get_width() / 2, 250))
 					# Persistence | Implementacion HighScore GameOver
 					win.blit(img3, (WIDTH // 2 - img3.get_width() / 2, 300))
+
+					#Guardar el highscore cuando termina
+					save_high_score()
 
 					if close_btn.draw(win):
 						running = False
