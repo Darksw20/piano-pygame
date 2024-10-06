@@ -223,8 +223,12 @@ while running:
 
 					img1 = gameover_font.render('Game over', True, WHITE)
 					img2 = score_font.render(f'Score : {score}', True, WHITE)
+     				# Persistence | Implementacion HighScore GameOver
+					img3 = score_font.render(f'High Score : {high_score}', True, WHITE)
 					win.blit(img1, (WIDTH // 2 - img1.get_width() / 2, 180))
 					win.blit(img2, (WIDTH // 2 - img2.get_width() / 2, 250))
+					# Persistence | Implementacion HighScore GameOver
+					win.blit(img3, (WIDTH // 2 - img3.get_width() / 2, 300))
 
 					if close_btn.draw(win):
 						running = False
