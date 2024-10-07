@@ -191,6 +191,8 @@ while running:
 							score += 1
 							if score >= high_score:
 								high_score = score
+								new_high_score_text = score_font.render("New High Score!", True, (255, 215, 0)) # amarillo
+								win.blit(new_high_score_text, (WIDTH // 2 - new_high_score_text.get_width() // 2, 100))
 							
 
 							note = notes_list[note_count].strip()
